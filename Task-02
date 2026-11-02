@@ -1,0 +1,141 @@
+#include <stdio.h>
+
+unsigned long checks = 0;
+
+
+/* Original method: 2 to n-1 */
+
+int original_prime(unsigned long n)
+{
+    unsigned long i;
+
+    checks = 0;
+
+    if (n < 2)
+        return 0;
+
+    for (i = 2; i < n; i++)
+    {
+        checks++;
+
+        if (n % i == 0)
+            return 0;
+    }
+
+    return 1;
+}
+
+
+/* Improved for loop */
+
+int is_prime(unsigned long n)
+{
+    unsigned long i;
+
+    checks = 0;
+
+    if (n < 2)
+        return 0;
+
+    for (i = 2; i <= n / i; i++)
+    {
+        checks++;
+
+        if (n % i == 0)
+            return 0;
+    }
+
+    return 1;
+}
+
+
+/* Improved while loop */
+
+int while_prime(unsigned long n)
+{
+    unsigned long i = 2;
+
+    checks = 0;
+
+    if (n < 2)
+        return 0;
+
+    while (i <= n / i)
+    {
+        checks++;
+
+        if (n % i == 0)
+            return 0;
+
+        i++;
+    }
+
+    return 1;
+}
+
+
+/* Improved do-while loop */
+
+int do_prime(unsigned long n)
+{
+    unsigned long i = 2;
+
+    checks = 0;
+
+    if (n < 2)
+        return 0;
+
+    do
+    {
+        if (i > n / i)
+            break;
+
+        checks++;
+
+        if (n % i == 0)
+            return 0;
+
+        i++;
+
+    } while (1);
+
+    return 1;
+}
+
+
+int main(void)
+{
+    unsigned long tickets[] = {97, 100, 7919, 1000003};
+
+    int i, result;
+
+    printf("Lucky Draw Ticket Verification\n\n");
+
+    /* Improved for loop */
+
+    for (i = 0; i < 4; i++)
+    {
+        result = is_prime(tickets[i]);
+
+        printf("%lu %s divisions = %lu\n",
+               tickets[i],
+               result ? "prime" : "not prime",
+               checks);
+    }
+
+    printf("\nLoop Comparison for 97\n");
+
+    result = original_prime(97);
+    printf("Original For Loop: %lu divisions\n", checks);
+
+    result = is_prime(97);
+    printf("Improved For Loop: %lu divisions\n", checks);
+
+    result = while_prime(97);
+    printf("Improved While Loop: %lu divisions\n", checks);
+
+    result = do_prime(97);
+    printf("Improved Do-While Loop: %lu divisions\n", checks);
+
+    return 0;
+}
