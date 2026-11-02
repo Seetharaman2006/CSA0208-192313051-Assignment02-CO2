@@ -1,0 +1,105 @@
+#include <stdio.h>
+
+int main(void)
+{
+    double balance;
+    double rate;
+    double repayment;
+
+    double interest;
+    double total_interest = 0;
+    double payment;
+    double opening;
+
+    int month = 0;
+
+    printf("MICRO LOAN REPAYMENT SCHEDULE\n\n");
+
+    printf("Enter loan amount: ");
+    scanf("%lf", &balance);
+
+    printf("Enter monthly interest rate: ");
+    scanf("%lf", &rate);
+
+    printf("Enter monthly repayment: ");
+    scanf("%lf", &repayment);
+
+    /* Input validation */
+
+    if (balance <= 0 || rate < 0 || repayment <= 0)
+    {
+        printf("Invalid input!\n");
+        return 0;
+    }
+
+    rate = rate / 100.0;
+
+    /* Check repayment feasibility */
+
+    if (repayment <= balance * rate)
+    {
+        printf("Repayment is too small. Loan cannot be cleared.\n");
+        return 0;
+    }
+
+    printf("\nMonth\tOpening\tInterest\tPayment\tClosing\n");
+
+    while (balance > 0.005)
+    {
+        month++;
+
+        /* Safety limit */
+
+        if (month > 360)
+        {
+            printf("\nSafety limit reached.\n");
+            printf("Loan is not fully repaid.\n");
+            break;
+        }
+
+        opening = balance;
+
+        /* Calculate interest */
+
+        interest = balance * rate;
+
+        total_interest = total_interest + interest;
+
+        /* Add interest */
+
+        balance = balance + interest;
+
+        /* Adjust final payment */
+
+        if (balance < repayment)
+            payment = balance;
+        else
+            payment = repayment;
+
+        /* Deduct repayment */
+
+        balance = balance - payment;
+
+        if (balance < 0.005)
+            balance = 0;
+
+        printf("%d\t%.2lf\t%.2lf\t\t%.2lf\t%.2lf\n",
+               month,
+               opening,
+               interest,
+               payment,
+               balance);
+    }
+
+    if (balance == 0)
+    {
+        printf("\nLOAN COMPLETED SUCCESSFULLY\n");
+
+        printf("Total Months = %d\n", month);
+
+        printf("Total Interest Paid = Rs. %.2lf\n",
+               total_interest);
+    }
+
+    return 0;
+}
